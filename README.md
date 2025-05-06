@@ -106,12 +106,11 @@ Run `sudo reboot_resize help` or `reboot_resize` with no arguments for detailed 
 8.  **MANUAL STEP: Resize the Partition Table Entry.**
     After the filesystem is shrunk, you need to update the partition table to reflect the new, smaller end point of the partition.
     *   **Option A (Live Environment - Safest for beginners):** Boot from a Live USB (e.g., GParted Live, or your distribution's installer in rescue mode). Use GParted (graphical) or `cfdisk`/`fdisk`/`parted` (command-line) to shrink the actual partition. This is generally the safest way as the partition is unmounted.
-    *   **Option B (Advanced - Online with `gdisk` or `fdisk` - GPT only for `gdisk`):** For **GPT partitioned disks**, you can *sometimes* delete and re-create the partition entry *with the same start sector but a new, smaller end sector* using `gdisk` **on the running system**. This is highly advanced and risky.
+    *   **Option B (Advanced - Online with `gdisk` or `fdisk` - GPT only for `gdisk`):You can usually delete and re-create the partition entry *with the same start sector but a new, smaller end sector* using `gdisk` **on the running system**. This is highly advanced and risky.
         *   You would note the exact start sector of your root partition.
-        *   Unmount any non-root filesystems on the same disk if possible (though root will be mounted).
         *   Use `gdisk /dev/sdX` (replace `sdX` with your disk).
         *   Delete the root partition entry (e.g., `d` command).
-        *   Re-create it (e.g., `n` command) with the **same start sector**, a new end sector (calculated to match your new 8G filesystem plus a small safety margin), and the **same partition type GUID**.
+        *   Re-create it (e.g., `n` command) with the **same start sector**, a new end sector (calculated to match your newly resized filesystem), and the **same partition type GUID**.
         *   Write changes (`w`).
         *   You will likely need to run `partprobe /dev/sdX` or reboot for the kernel to re-read the new partition table.
         *   **This online method is extremely risky. A typo can destroy your partition table. It's generally not recommended unless you are very experienced.** The live environment method is much safer.
